@@ -59,6 +59,8 @@ class OutputSMSRelatedObject(BaseRelatedObject):
 
 class AbstractSMSTemplate(BaseAbstractTemplate):
 
+    is_secret = models.BooleanField(null=False, blank=False, verbose_name=_('is secret'))
+
     def get_controller(self):
         from pymess.backend.sms import SMSController
         return SMSController()
