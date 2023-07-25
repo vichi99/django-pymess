@@ -14,4 +14,9 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False),
             preserve_default=False,
         ),
+        migrations.AlterField(
+            model_name='smstemplate',
+            name='is_secret',
+            field=models.BooleanField(default=True),
+        ),
     ]
