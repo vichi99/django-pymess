@@ -29,7 +29,7 @@ class EmailController(BaseController):
         """
         return self.model.State.WAITING
 
-    def create_message(self, sender, sender_name, recipient, subject, content, related_objects, tag, template,
+    def create_message(self, sender, sender_name, recipient, subject, pre_header, content, related_objects, tag, template,
                        attachments, priority=settings.DEFAULT_MESSAGE_PRIORITY, **kwargs):
         """
         Create e-mail which will be logged in the database.
@@ -37,6 +37,7 @@ class EmailController(BaseController):
         :param sender_name: friendly name of the sender
         :param recipient: e-mail address of the receiver
         :param subject: subject of the e-mail message
+        :param pre_header: pre header of the e-mail message
         :param content: content of the e-mail message
         :param related_objects: list of related objects that will be linked with the e-mail message using generic
         relation
@@ -56,6 +57,7 @@ class EmailController(BaseController):
                 sender=sender,
                 sender_name=sender_name,
                 subject=subject,
+                pre_header=pre_header,
                 state=self.get_initial_email_state(recipient),
                 priority=priority,
                 extra_data=kwargs,
@@ -117,7 +119,7 @@ def send_template(recipient, slug, context_data, related_objects=None, attachmen
     )
 
 
-def send(sender, recipient, subject, content, sender_name=None, related_objects=None, attachments=None, tag=None,
+def send(sender, recipient, subject, content, pre_header=None, sender_name=None, related_objects=None, attachments=None, tag=None,
          send_immediately=False, message_backend=None, **kwargs):
     """
     Helper for sending e-mail message.
@@ -125,6 +127,7 @@ def send(sender, recipient, subject, content, sender_name=None, related_objects=
     :param recipient: e-mail address of the receiver
     :param subject: subject of the e-mail message
     :param content: content of the e-mail message
+    :param pre_header: pre header of the e-mail message
     :param sender_name: friendly name of the sender
     :param related_objects: list of related objects that will be linked with the e-mail message with generic
         relation
@@ -140,6 +143,7 @@ def send(sender, recipient, subject, content, sender_name=None, related_objects=
         recipient=recipient,
         subject=subject,
         content=content,
+        pre_header=pre_header,
         sender_name=sender_name,
         related_objects=related_objects,
         tag=tag,
