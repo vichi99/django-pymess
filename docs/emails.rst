@@ -5,9 +5,9 @@ E-mails
 
 Like SMS E-mail messages are stored inside Django model class and sent via backend. Again we provide more e-mail backends, every backend uses different e-mail service like Mandrill, AWS SNS or standard SMTP. For sending e-mail message you can use function ``pymess.backend.email.send`` or ``pymwess.backend.email.send_template``.
 
-.. function:: pymess.backend.emails.send(sender, recipient, subject, content, sender_name=None, related_objects=None, attachments=None, tag=None, send_immediately=False, **kwargs)
+.. function:: pymess.backend.emails.send(sender, recipient, subject, content, pre_header=None, sender_name=None, related_objects=None, attachments=None, tag=None, send_immediately=False, **kwargs)
 
-  Parameter ``sender`` define source e-mail address of the message, you can specify the name of the sender with optional parameter ``sender_name``.  ``recipient`` is destination e-mail address. Subject and HTML content of the e-mail message is defined with  ``subject`` and ``content`` parameters. Attribute ``related_objects`` should contain a list of objects that you want to connect with the send message (with generic relation). Optional parameter ``attachments`` should contains list of files that will be sent with the e-mail in format ``({file name}, {output stream with file content}, {content type})``.  ``tag`` is string mark which is stored with the sent SMS message . The last non required parameter ``**email_kwargs`` is extra data that will be stored inside e-mail message model in field ``extra_data``.
+  Parameter ``sender`` define source e-mail address of the message, you can specify the name of the sender and pre header with optional parameter ``sender_name`` and ``pre_header``.  ``recipient`` is destination e-mail address. Subject and HTML content of the e-mail message is defined with  ``subject`` and ``content`` parameters. Attribute ``related_objects`` should contain a list of objects that you want to connect with the send message (with generic relation). Optional parameter ``attachments`` should contains list of files that will be sent with the e-mail in format ``({file name}, {output stream with file content}, {content type})``.  ``tag`` is string mark which is stored with the sent SMS message . The last non required parameter ``**email_kwargs`` is extra data that will be stored inside e-mail message model in field ``extra_data``.
 
 .. function:: pymess.backend.emails.send_template(recipient, slug, context_data, related_objects=None, attachments=None, tag=None, send_immediately=False)
 
@@ -47,6 +47,10 @@ Models
   .. attribute:: subject
 
     ``TextField``, contains subject of the e-mail message.
+
+  .. attribute:: pre_header
+
+    ``CharField``, contains pre header of the e-mail message.
 
   .. attribute:: content
 
@@ -195,6 +199,10 @@ Models
   .. attribute:: subject
 
     ``TextField``, contains subject of the e-mail message. Final e-mail subject is rendered with Django template system by default.
+
+  .. attribute:: pre_header
+
+    ``CharField``, contains pre header of the e-mail message.
 
   .. attribute:: body
 

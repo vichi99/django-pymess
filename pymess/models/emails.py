@@ -63,6 +63,7 @@ class EmailMessage(BaseMessage):
     sender = models.EmailField(verbose_name=_('sender'), blank=False, null=False)
     sender_name = models.CharField(verbose_name=_('sender name'), blank=True, null=True, max_length=250)
     subject = models.TextField(verbose_name=_('subject'), blank=False, null=False)
+    pre_header = models.CharField(verbose_name=_('pre header'), blank=True, null=True, max_length=100)
     external_id = models.CharField(verbose_name=_('external ID'), blank=True, null=True, db_index=True, max_length=250)
     last_webhook_received_at = models.DateTimeField(
         verbose_name=_('last webhook received at'),
@@ -158,6 +159,7 @@ class Attachment(SmartModel):
 class AbstractEmailTemplate(BaseAbstractTemplate):
 
     subject = models.TextField(verbose_name=_('subject'), blank=False, null=False)
+    pre_header = models.CharField(verbose_name=_('pre header'), blank=True, null=True, max_length=100)
     sender = models.EmailField(verbose_name=_('sender'), null=True, blank=True, max_length=200)
     sender_name = models.CharField(verbose_name=_('sender name'), blank=True, null=True, max_length=250)
 
@@ -192,6 +194,7 @@ class AbstractEmailTemplate(BaseAbstractTemplate):
             tag=tag,
             sender=self.sender,
             subject=self.render_subject(context_data),
+            pre_header=self.pre_header,
             sender_name=self.sender_name,
             priority=priority,
             attachments=attachments,

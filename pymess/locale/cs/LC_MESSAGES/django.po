@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-18 20:51-0500\n"
+"POT-Creation-Date: 2023-11-10 13:33+0100\n"
 "PO-Revision-Date: 2022-01-07 16:10+0100\n"
 "Last-Translator: Lukáš Říha <lukas.riha@mallpay.cz>\n"
 "Language-Team: \n"
@@ -359,7 +359,7 @@ msgid "Error during template body rendering: \"{}\""
 msgstr "Chyba během vykreslování obsahu zprávy: \"{}\""
 
 #: models/dialer.py:27 models/dialer.py:96 models/emails.py:58
-#: models/emails.py:261 models/emails.py:276 models/push.py:22 models/sms.py:27
+#: models/emails.py:264 models/emails.py:279 models/push.py:22 models/sms.py:27
 #: models/sms.py:81
 msgid "template"
 msgstr "šablona"
@@ -416,95 +416,99 @@ msgstr "zakázaný objekt zprávy dialeru"
 msgid "disallowed objects of dialer templates"
 msgstr "zakázané objekty zpráv dialeru"
 
-#: models/emails.py:63 models/emails.py:161 models/sms.py:32
+#: models/emails.py:63 models/emails.py:163 models/sms.py:32
 msgid "sender"
 msgstr "odesílatel"
 
-#: models/emails.py:64 models/emails.py:162
+#: models/emails.py:64 models/emails.py:164
 msgid "sender name"
 msgstr "jméno odesílatele"
 
-#: models/emails.py:65 models/emails.py:160
+#: models/emails.py:65 models/emails.py:161
 msgid "subject"
 msgstr "předmět"
 
-#: models/emails.py:66
+#: models/emails.py:66 models/emails.py:162
+msgid "pre header"
+msgstr "hlavička"
+
+#: models/emails.py:67
 msgid "external ID"
 msgstr "externí ID"
 
-#: models/emails.py:68
+#: models/emails.py:69
 msgid "last webhook received at"
 msgstr "Poslední webhook přijat"
 
-#: models/emails.py:74
+#: models/emails.py:75
 msgid "info changed at"
 msgstr "informace změněny"
 
-#: models/emails.py:80
+#: models/emails.py:81
 msgid "content file"
 msgstr "soubor s obsahem"
 
-#: models/emails.py:89 models/emails.py:113 models/emails.py:141
+#: models/emails.py:90 models/emails.py:114 models/emails.py:142
 msgid "e-mail message"
 msgstr "e-mail"
 
-#: models/emails.py:90
+#: models/emails.py:91
 msgid "e-mail messages"
 msgstr "e-maily"
 
-#: models/emails.py:117
+#: models/emails.py:118
 msgid "related object of a e-mail message"
 msgstr "vztažený objekt e-mailové zprávy"
 
-#: models/emails.py:118
+#: models/emails.py:119
 msgid "related objects of e-mail messages"
 msgstr "vztažené typy e-mailových zpráv"
 
-#: models/emails.py:143 models/emails.py:278
+#: models/emails.py:144 models/emails.py:281
 msgid "content type"
 msgstr "typ přílohy"
 
-#: models/emails.py:144 models/emails.py:279
+#: models/emails.py:145 models/emails.py:282
 msgid "file"
 msgstr "soubor"
 
-#: models/emails.py:146 models/emails.py:281
+#: models/emails.py:147 models/emails.py:284
 msgid "filename"
 msgstr "název souboru"
 
-#: models/emails.py:154
+#: models/emails.py:155
 msgid "attachment"
 msgstr "příloha"
 
-#: models/emails.py:155
+#: models/emails.py:156
 msgid "attachments"
 msgstr "přílohy"
 
-#: models/emails.py:177
+#: models/emails.py:179
 msgid "Error during template subject rendering: \"{}\""
 msgstr "Chyba během vykreslování předmětu zprávy: \"{}\""
 
-#: models/emails.py:203
+#: models/emails.py:206
 msgid "e-mail template"
 msgstr "šablona e-mailu"
 
-#: models/emails.py:204
+#: models/emails.py:207
 msgid "e-mail templates"
 msgstr "šablony e-mailů"
 
-#: models/emails.py:270
+#: models/emails.py:273
 msgid "disallowed object of an e-mail template"
 msgstr "zakázaný objekt e-mailové zprávy"
 
-#: models/emails.py:271
+#: models/emails.py:274
 msgid "disallowed objects of e-mail templates"
 msgstr "zakázané objekty e-mailových zpráv"
 
-#: models/emails.py:284
+#: models/emails.py:287
 msgid "e-mail template attachment"
 msgstr "příloha e-mailové šablony"
 
-#: models/emails.py:285
+#: models/emails.py:288
 msgid "e-mail template attachments"
 msgstr "přílohy e-mailové šablony"
 
