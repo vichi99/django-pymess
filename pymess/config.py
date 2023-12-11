@@ -108,8 +108,9 @@ DEFAULTS = {
     'PUSH_NOTIFICATION_BATCH_MAX_SECONDS_TO_SEND': 60 * 60,
     'PUSH_NOTIFICATION_RETRY_SENDING': True,
 
-    # General message settings
+    # General settings
     'DEFAULT_MESSAGE_PRIORITY': 3,
+    'SHUTDOWN_DETECTION_FUNCTION': None,
 }
 
 

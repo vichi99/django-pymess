@@ -1,3 +1,4 @@
+import import_string
 import logging
 
 from chamber.utils.transaction import smart_atomic
@@ -8,6 +9,7 @@ from pymess.backend.dialer import DialerController
 from pymess.backend.emails import EmailController
 from pymess.backend.push import PushNotificationController
 from pymess.backend.sms import SMSController
+from pymess.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,9 @@ class Command(BaseCommand):
         self.touched_message_pks = set()
         self.send_message_pks = set()
         self.failed_message_pks = set()
+        self.shutdown_detection_function = (
+            import_string(settings.SHUTDOWN_DETECTION_FUNCTION) if settings.SHUTDOWN_DETECTION_FUNCTION else None
+        )
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
@@ -64,6 +69,9 @@ class Command(BaseCommand):
         else:
             self.stdout.write('{}: {}'.format(title, len(message_pks)))
 
+    def _is_system_shutting_down(self):
+        return self.shutdown_detection_function is not None and self.shutdown_detection_function()
+
     def handle(self, type, *args, **options):
         controller = self.controllers[type]
         if not controller.is_turned_on_batch_sending():
@@ -71,6 +79,9 @@ class Command(BaseCommand):
 
         try:
             for _ in range(controller.get_batch_size()):
+                if self._is_system_shutting_down():
+                    self.stdout.write("System is shutting down, exitting gracefully.")
+                    break
                 if not self._send_message(controller):
                     break
             self._print_result('sent messages', self.send_message_pks)
