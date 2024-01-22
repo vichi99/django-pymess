@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-10 13:33+0100\n"
+"POT-Creation-Date: 2024-01-22 14:01+0100\n"
 "PO-Revision-Date: 2022-01-07 16:10+0100\n"
 "Last-Translator: Lukáš Říha <lukas.riha@mallpay.cz>\n"
 "Language-Team: \n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.1\n"
+
+#: backend/__init__.py:50
+msgid "the number of send attempts exceeded the limit"
+msgstr "počet pokusů o odeslání překročil limit"
+
+#: backend/__init__.py:53
+msgid "the age of the message exceeds the send limit"
+msgstr "stáří zprávy překračuje limit pro odeslání"
 
 #: backend/emails/mandrill.py:100
 msgid "invalid"

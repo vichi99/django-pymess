@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.db import transaction
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _l
+from django.utils.translation import ugettext
 from django.utils.timezone import now
 
 from pymess.config import settings
@@ -45,9 +46,11 @@ class BaseController:
 
     def publish_or_retry_message(self, message):
         backend = self.get_backend(recipient=message.recipient)
-        if (message.number_of_send_attempts > backend.get_batch_max_number_of_send_attempts()
-            or message.created_at < now() - timedelta(seconds=self.get_batch_max_seconds_to_send())):
-            backend._set_message_as_failed(message)
+        if message.number_of_send_attempts > backend.get_batch_max_number_of_send_attempts():
+            backend._set_message_as_failed(message, error=ugettext('the number of send attempts exceeded the limit'))
+            return False
+        elif message.created_at < now() - timedelta(seconds=self.get_batch_max_seconds_to_send()):
+            backend._set_message_as_failed(message, error=ugettext('the age of the message exceeds the send limit'))
             return False
         else:
             backend.publish_message(message)
@@ -226,14 +229,16 @@ class BaseBackend:
             **kwargs
         )
 
-    def _set_message_as_failed(self, message):
+    def _set_message_as_failed(self, message, **kwargs):
         """
         Method for updating state of the message to the final error state
         :param message: message object
+        :param kwargs: changed object kwargs
         """
         self._update_message(
             message,
             state=message.State.ERROR,
+            **kwargs
         )
 
     def publish_message(self, message):
