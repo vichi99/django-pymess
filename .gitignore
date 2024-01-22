@@ -6,6 +6,10 @@ doc/
 ##############
 ve/
 
+# pyenv #
+##############
+.python-version
+
 # Compiled source #
 ###################
 *.pyc
