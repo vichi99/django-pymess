@@ -1,7 +1,7 @@
 import re
 
 from django.utils import timezone as tz
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from pymess.backend.dialer import DialerBackend
 from pymess.config import settings

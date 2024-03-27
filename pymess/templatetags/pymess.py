@@ -6,7 +6,7 @@ from django import template
 from django.conf import settings
 from django.template.base import Node, TemplateSyntaxError, render_value_in_context
 from django.template.loader import render_to_string
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import format_html
 
 register = template.Library()
@@ -24,9 +24,9 @@ class RaiseIfNoneNode(Node):
         value = self.variable_name.resolve(context)
         if not value and not self.check_variable.resolve(context):
             raise ValueError('Email with slug {} missing variable named {}'.format(self.email_slug.resolve(context),
-                                                                                   force_text(self.variable_name)))
+                                                                                   force_str(self.variable_name)))
         if not value:
-            value = '{{{{ {} }}}}'.format(force_text(self.variable_name))
+            value = '{{{{ {} }}}}'.format(force_str(self.variable_name))
 
         if self.assign_to:
             context[self.assign_to] = render_value_in_context(value, context)
