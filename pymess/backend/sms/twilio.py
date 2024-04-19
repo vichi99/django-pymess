@@ -2,7 +2,7 @@ from enum import Enum
 
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _l
+from django.utils.translation import gettext_lazy as _l
 
 from pymess.backend.sms import SMSBackend
 from pymess.enums import OutputSMSMessageState

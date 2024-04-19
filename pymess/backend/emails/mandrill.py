@@ -8,8 +8,8 @@ from json.decoder import JSONDecodeError
 from enum import Enum
 
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 import mandrill
 
@@ -97,9 +97,9 @@ class MandrillEmailBackend(EmailBackend):
             state = self.MANDRILL_STATES_MAPPING.get(mandrill_state)
             error = None
             if mandrill_state == MandrillState.INVALID:
-                error = ugettext('invalid')
+                error = gettext('invalid')
             elif mandrill_state == MandrillState.REJECTED:
-                error = ugettext('rejected, mandrill message: "{}"').format(result['reject_reason'])
+                error = gettext('rejected, mandrill message: "{}"').format(result['reject_reason'])
 
             extra_sender_data = message.extra_sender_data or {}
             extra_sender_data['result'] = result

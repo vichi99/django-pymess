@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 
 from pymess.config import settings
 from pymess.enums import DialerMessageState
@@ -45,7 +45,7 @@ class AbstractDialerMessage(BaseMessage):
         super().clean()
 
     def clean_recipient(self):
-        self.recipient = normalize_phone_number(force_text(self.recipient))
+        self.recipient = normalize_phone_number(force_str(self.recipient))
 
     @property
     def failed(self):

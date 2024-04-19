@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.utils.functional import cached_property
 from django.db import models
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.template import Template, Context
 from django.template.exceptions import TemplateSyntaxError, TemplateDoesNotExist
 
@@ -176,7 +176,7 @@ class AbstractEmailTemplate(BaseAbstractTemplate):
         try:
             self.render_subject(context_data or {})
         except (TemplateSyntaxError, TemplateDoesNotExist) as ex:
-            raise ValidationError(ugettext('Error during template subject rendering: "{}"').format(ex))
+            raise ValidationError(gettext('Error during template subject rendering: "{}"').format(ex))
 
     def get_subject(self):
         return self.subject

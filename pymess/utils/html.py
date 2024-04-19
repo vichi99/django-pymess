@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 from pymess.config import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 def find_banned_tag(html_body: str, banned_tags: Sequence[str] = None) -> Optional[str]:

@@ -1,7 +1,7 @@
 from chamber.utils import remove_accent
 from django.db import models
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 
 from pymess.config import settings
 from pymess.utils import normalize_phone_number
@@ -36,7 +36,7 @@ class OutputSMSMessage(BaseMessage):
         verbose_name_plural = _('output SMS')
 
     def clean_recipient(self):
-        self.recipient = normalize_phone_number(force_text(self.recipient))
+        self.recipient = normalize_phone_number(force_str(self.recipient))
 
     def clean_content(self):
         if not settings.SMS_USE_ACCENT:

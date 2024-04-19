@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.db.models.functions import Cast
 from django.template import Context, Template
 from django.template.exceptions import TemplateDoesNotExist, TemplateSyntaxError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from chamber.models import SmartModel
 

@@ -32,8 +32,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
     ],
     install_requires=[
-        'django>=3.1',
-        'skip-django-chamber>=0.6.16.3',
+        'django>=4.2',
+        'skip-django-chamber>=0.7.2',
         'beautifulsoup4==4.8.0',
         'skip-django-choice-enumfields>=1.1.3.2',
     ],
