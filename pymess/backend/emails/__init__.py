@@ -93,8 +93,8 @@ class EmailBackend(BaseBackend):
         raise NotImplementedError
 
 
-def send_template(recipient, slug, context_data, related_objects=None, attachments=None, tag=None,
-                  send_immediately=False):
+def send_template(recipient, slug, context_data, locale=None, related_objects=None, attachments=None,
+                  tag=None, send_immediately=False):
     """
     Helper for building and sending e-mail message from a template.
     :param recipient: e-mail address of the receiver
@@ -111,6 +111,7 @@ def send_template(recipient, slug, context_data, related_objects=None, attachmen
         recipient=recipient,
         slug=slug,
         context_data=context_data,
+        locale=locale,
         related_objects=related_objects,
         tag=tag,
         template_model=get_email_template_model(),

@@ -51,11 +51,11 @@ class PushNotificationBackend(BaseBackend):
         return settings.PUSH_NOTIFICATION_RETRY_SENDING and is_turned_on_push_notification_batch_sending()
 
 
-def send_template(recipient, slug, context_data, related_objects=None, tag=None, send_immediately=None):
+def send_template(recipient, slug, context_data, locale=None, related_objects=None, tag=None, send_immediately=None):
     """
     Helper for building and sending push notification message from a template.
     :param recipient: push notification recipient
-    :param slug: slug of a push notifiaction template
+    :param slug: slug of a push notification template
     :param context_data: dict of data that will be sent to the template renderer
     :param related_objects: list of related objects that will be linked with the push notification using generic
         relation
@@ -67,6 +67,7 @@ def send_template(recipient, slug, context_data, related_objects=None, tag=None,
         recipient=recipient,
         slug=slug,
         context_data=context_data,
+        locale=locale,
         related_objects=related_objects,
         tag=tag,
         template_model=get_push_notification_template_model(),

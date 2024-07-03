@@ -107,7 +107,7 @@ class DialerBackend(BaseBackend):
         raise NotImplementedError('Check dialer state is not supported with the backend')
 
 
-def send_template(recipient, slug, context_data, related_objects=None, tag=None, send_immediately=False):
+def send_template(recipient, slug, context_data, locale=None, related_objects=None, tag=None, send_immediately=False):
     """
     Helper for building and sending dialer message from a template.
     :param recipient: phone number of the recipient
@@ -120,11 +120,12 @@ def send_template(recipient, slug, context_data, related_objects=None, tag=None,
     :return: dialer message object or None if template cannot be sent
     """
     return _send_template(
-        recipient,
-        slug,
-        context_data,
-        related_objects,
-        tag,
+        recipient=recipient,
+        slug=slug,
+        context_data=context_data,
+        locale=locale,
+        related_objects=related_objects,
+        tag=tag,
         template_model=get_dialer_template_model(),
         send_immediately=send_immediately
     )

@@ -268,7 +268,7 @@ class BaseBackend:
         raise NotImplementedError
 
 
-def send_template(recipient, slug, context_data, related_objects=None, tag=None, template_model=None, **kwargs):
+def send_template(recipient, slug, context_data, locale=None, related_objects=None, tag=None, template_model=None, **kwargs):
     """
     Helper for building and sending message from a template.
     :param recipient: email or phone number of the recipient
@@ -284,7 +284,7 @@ def send_template(recipient, slug, context_data, related_objects=None, tag=None,
 
     assert template_model is not None, _l('template_model cannot be None')
 
-    return template_model.objects.get(slug=slug).send(
+    return template_model.objects.get(slug=slug, locale=locale).send(
         recipient,
         context_data,
         related_objects=related_objects,
