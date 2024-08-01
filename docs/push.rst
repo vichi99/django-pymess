@@ -9,7 +9,7 @@ PUSH notifications are stored inside Django model class defined later, are sent 
 
   Function has two required parameters ``recipient`` which is an identifier of the receiver and ``content``. Attribute ``content`` is a text message that will be sent inside the push notification. Attribute ``related_objects`` should contain a list of objects that you want to connect with the sent message (with generic relation). ``tag`` is string mark which is stored with the sent message . The last non required parameter ``**push_nofification_kwargs`` is extra data that will be stored inside push notification model in field ``extra_data``.
 
-.. function:: pymess.backend.push.send_template(recipient, slug, context_data, related_objects=None, tag=None, send_immediately=False)
+.. function:: pymess.backend.push.send_template(recipient, slug, context_data, locale=None, related_objects=None, tag=None, send_immediately=False)
 
   The second function is used for sending prepared templates that are stored inside template model (class that extends ``pymess.models.push.AbstractPushNotificationTemplate``). The first parameter ``recipient`` is identifier of the receiver, ``slug`` is key of the template, ``context_data`` is a dictionary that contains context data for rendering push notification content from the template, ``related_objects`` should contains list of objects that you want to connect with the sent message and  ``tag`` is string mark which is stored with the sent push notification message.
 
@@ -51,7 +51,7 @@ Models
 
   .. attribute:: template_slug
 
-    If push was sent from the template, this attribute cointains key of the template.
+    If push was sent from the template, this attribute contains key of the template.
 
   .. attribute:: template
 
@@ -69,11 +69,11 @@ Models
 
   .. attribute:: backend
 
-    Field contains path to the push backend that was used for sending of the push notifiaction.
+    Field contains path to the push backend that was used for sending of the push notification.
 
   .. attribute:: error
 
-    If error was raised during sending of the push notifiaction this field contains text description of the error.
+    If error was raised during sending of the push notification this field contains text description of the error.
 
   .. attribute:: extra_data
 

@@ -160,8 +160,8 @@ class BaseRelatedObject(SmartModel):
 
 class BaseAbstractTemplate(SmartModel):
 
-    slug = models.SlugField(verbose_name=_('slug'), max_length=100, null=False, blank=False, editable=False,
-                            primary_key=True)
+    slug = models.SlugField(verbose_name=_('slug'), max_length=100, null=False, blank=False, editable=False)
+    locale = models.CharField(verbose_name=_('locale'), max_length=10, null=True, blank=True, editable=False)
     body = models.TextField(verbose_name=_('message body'), null=True, blank=False)
     is_active = models.BooleanField(null=False, blank=False, default=True, verbose_name=_('is active'))
     is_locked = models.BooleanField(null=False, blank=False, default=False, verbose_name=_('is locked'))
@@ -232,8 +232,9 @@ class BaseAbstractTemplate(SmartModel):
             return None
 
     def __str__(self):
-        return self.slug
+        return f"{self.slug} ({self.locale})" if self.locale else self.slug
 
     class Meta:
         abstract = True
+        unique_together = ("slug", "locale")
         ordering = ('-created_at',)

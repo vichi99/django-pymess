@@ -115,7 +115,7 @@ class SMSBackend(BaseBackend):
         return settings.SMS_RETRY_SENDING and is_turned_on_sms_batch_sending()
 
 
-def send_template(recipient, slug, context_data, related_objects=None, tag=None, send_immediately=False):
+def send_template(recipient, slug, context_data, locale=None, related_objects=None, tag=None, send_immediately=False):
     """
     Helper for building and sending SMS message from a template.
     :param recipient: phone number of the recipient
@@ -130,6 +130,7 @@ def send_template(recipient, slug, context_data, related_objects=None, tag=None,
     return _send_template(
         recipient=recipient,
         slug=slug,
+        locale=locale,
         context_data=context_data,
         related_objects=related_objects,
         tag=tag,
