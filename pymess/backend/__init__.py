@@ -284,7 +284,12 @@ def send_template(recipient, slug, context_data, locale=None, related_objects=No
 
     assert template_model is not None, _l('template_model cannot be None')
 
-    return template_model.objects.get(slug=slug, locale=locale).send(
+    variant = kwargs.pop('variant', None)
+    query_params = {'slug': slug, 'locale': locale}
+    if variant is not None:
+        query_params['variant'] = variant
+
+    return template_model.objects.get(**query_params).send(
         recipient,
         context_data,
         related_objects=related_objects,

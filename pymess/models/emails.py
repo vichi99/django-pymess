@@ -162,6 +162,7 @@ class AbstractEmailTemplate(BaseAbstractTemplate):
     pre_header = models.CharField(verbose_name=_('pre header'), blank=True, null=True, max_length=100)
     sender = models.EmailField(verbose_name=_('sender'), null=True, blank=True, max_length=200)
     sender_name = models.CharField(verbose_name=_('sender name'), blank=True, null=True, max_length=250)
+    variant = models.CharField(verbose_name=_('variant'), max_length=10, null=True, blank=True, editable=False)
 
     def get_controller(self):
         from pymess.backend.emails import EmailController
@@ -201,9 +202,14 @@ class AbstractEmailTemplate(BaseAbstractTemplate):
             **kwargs,
         )
 
+
+    def __str__(self):
+        return f"{super().__str__()} ({self.variant})" if self.variant else super().__str__()
+
     class Meta(BaseAbstractTemplate.Meta):
         abstract = True
         verbose_name = _('e-mail template')
+        unique_together = ("slug", "locale", "variant")
         verbose_name_plural = _('e-mail templates')
 
 
