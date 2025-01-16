@@ -64,6 +64,7 @@ class SMSController(BaseController):
                 state=self.get_initial_sms_state(recipient),
                 priority=priority,
                 extra_data=kwargs,
+                sender=template.sender_name if template else None,
                 **self.get_backend(recipient).get_extra_message_kwargs()
             )
         except PersistenceException as ex:
