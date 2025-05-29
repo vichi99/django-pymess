@@ -1,4 +1,4 @@
-import import_string
+from django.utils.module_loading import import_string
 from pathlib import Path
 from uuid import uuid4
 

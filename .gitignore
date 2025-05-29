@@ -55,6 +55,7 @@ dj/static/js/app.js
 # Coverage #
 ############
 .coverage
+coverage.lcov
 
 # Makefile config #
 ###################
@@ -69,3 +70,6 @@ build/config
 ########
 .build
 
+# Python Package #
+#################
+skip_django_pymess.egg-info/
