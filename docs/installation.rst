@@ -130,7 +130,7 @@ E-MAIL
 
 .. attribute:: PYMESS_EMAIL_TEMPLATE_BASE_TEMPLATE
 
-  Path to the file containing an e-mail content in the Django template system format.
+  Path to the file containing e-mail content in Django template format. For multiple template versions, define them as a dictionary: ``{"version": "path"}``.
 
 .. attribute:: PYMESS_EMAIL_TEMPLATE_TEMPLATETAGS
 

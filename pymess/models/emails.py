@@ -163,6 +163,7 @@ class AbstractEmailTemplate(BaseAbstractTemplate):
     sender = models.EmailField(verbose_name=_('sender'), null=True, blank=True, max_length=200)
     sender_name = models.CharField(verbose_name=_('sender name'), blank=True, null=True, max_length=250)
     variant = models.CharField(verbose_name=_('variant'), max_length=10, null=True, blank=True, editable=False)
+    version = models.CharField(verbose_name=_('version'), max_length=10, null=True, blank=True)
 
     def get_controller(self):
         from pymess.backend.emails import EmailController
@@ -223,8 +224,23 @@ class EmailTemplate(AbstractEmailTemplate):
         super().clean_subject(context_data={'EMAIL_DISABLE_VARIABLE_VALIDATOR': True})
         raise_error_if_contains_banned_tags(self.subject)
 
+    def get_base_template(self):
+        base_template_config = settings.EMAIL_TEMPLATE_BASE_TEMPLATE
+
+        if not base_template_config:
+            raise ValidationError(gettext('EMAIL_TEMPLATE_BASE_TEMPLATE is not set'))
+
+        if isinstance(base_template_config, dict):
+            if not self.version:
+                return next(iter(base_template_config.values()), None)
+
+            return base_template_config.get(self.version)
+
+        return base_template_config
+
+
     def _extend_body(self, template_body):
-        base_template = settings.EMAIL_TEMPLATE_BASE_TEMPLATE
+        base_template = self.get_base_template()
         templatetags = settings.EMAIL_TEMPLATE_TEMPLATETAGS
 
         template_content = '{{% block {} %}}{}{{% endblock %}}'.format(
