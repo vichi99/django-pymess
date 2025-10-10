@@ -1,0 +1,3 @@
+{% for message in messages %}
+  <MsgId>{{ prefix }}{{ message.pk }}</MsgId>
+{% endfor %}

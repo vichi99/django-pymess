@@ -25,8 +25,8 @@ class BaseController:
     def __init__(self):
         self._loaded_backends = {}
 
-    def get_backend(self, recipient):
-        backend_name = self.router.get_backend_name(recipient) or get_default_sender_backend_name(self.backend_type_name)
+    def get_backend(self, recipient, **kwargs):
+        backend_name = self.router.get_backend_name(recipient, **kwargs) or get_default_sender_backend_name(self.backend_type_name)
         if backend_name not in self._loaded_backends:
             self._loaded_backends[backend_name] = get_backend(self.backend_type_name, backend_name)
         return self._loaded_backends[backend_name]
@@ -71,7 +71,7 @@ class BaseController:
         :param message_backend: message backend instance
         :param kwargs: extra attributes that will be stored to the message
         """
-        backend = message_backend or self.get_backend(recipient)
+        backend = message_backend or self.get_backend(recipient, **kwargs)
         message = self.create_message(recipient=recipient, content=content, related_objects=related_objects, tag=tag,
                                       template=template, **kwargs)
         if send_immediately or not self.is_turned_on_batch_sending():
@@ -119,7 +119,7 @@ class BaseController:
     def _get_backend_messages_map(self, messages):
         backends_messages_map = defaultdict(list)
         for message in messages:
-            backend = self.get_backend(recipient=message.recipient)
+            backend = self.get_backend(recipient=message.recipient, is_voice_message=getattr(message, 'is_voice_message', False))
             backends_messages_map[backend].append(message)
         return backends_messages_map
 

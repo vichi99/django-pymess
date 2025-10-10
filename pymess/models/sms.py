@@ -30,6 +30,8 @@ class OutputSMSMessage(BaseMessage):
                                 choices=OutputSMSMessageState.choices, editable=False,
                                 db_index=True)
     sender = models.CharField(verbose_name=_('sender'), null=True, blank=True, max_length=20)
+    is_voice_message = models.BooleanField(verbose_name=_('is voice message'), null=False, blank=False,
+                                           default=False)
 
     class Meta(BaseMessage.Meta):
         verbose_name = _('output SMS')
@@ -61,6 +63,8 @@ class AbstractSMSTemplate(BaseAbstractTemplate):
 
     is_secret = models.BooleanField(null=False, blank=False, default=True, verbose_name=_('is secret'))
     sender_name = models.CharField(null=True, blank=True, max_length=20, verbose_name=_('sender name'))
+    is_voice_message = models.BooleanField(verbose_name=_('is voice message'), null=False, blank=False,
+                                           default=False)
 
     def get_controller(self):
         from pymess.backend.sms import SMSController

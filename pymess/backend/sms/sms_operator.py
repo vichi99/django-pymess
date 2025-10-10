@@ -20,6 +20,8 @@ class RequestType(str, Enum):
 
     SMS = 'SMS'
     DELIVERY_REQUEST = 'DELIVERY_REQUEST'
+    VOICE_MESSAGE = 'VOICE_MESSAGE'
+    VOICE_MESSAGE_DELIVERY_REQUEST = 'VOICE_MESSAGE_DELIVERY_REQUEST'
 
 
 class SmsOperatorState(IntegerChoicesEnum):
@@ -55,9 +57,12 @@ class SMSOperatorBackend(SMSBackend):
         pass
 
     TEMPLATES = {
-        'base': 'pymess/sms/sms_operator/base.xml',
+        'base_sms': 'pymess/sms/sms_operator/base_sms.xml',
+        'base_voice': 'pymess/sms/sms_operator/base_voice.xml',
         RequestType.SMS: 'pymess/sms/sms_operator/sms.xml',
-        RequestType.DELIVERY_REQUEST: 'pymess/sms/sms_operator/delivery_request.xml',
+        RequestType.DELIVERY_REQUEST: 'pymess/sms/sms_operator/sms_delivery_request.xml',
+        RequestType.VOICE_MESSAGE: 'pymess/sms/sms_operator/voice.xml',
+        RequestType.VOICE_MESSAGE_DELIVERY_REQUEST: 'pymess/sms/sms_operator/voice_delivery_request.xml',
     }
 
     SMS_OPERATOR_STATES_MAPPING = {
@@ -78,9 +83,17 @@ class SMSOperatorBackend(SMSBackend):
     }
 
     config = {
-        'URL': 'https://www.sms-operator.cz/webservices/webservice.aspx',
+        'SMS_URL': 'https://www.sms-operator.cz/webservices/webservice.aspx',
+        'VOICE_URL': 'https://www.sms-operator.cz/webservices/voice.ashx',
         'UNIQ_PREFIX': '',
         'TIMEOUT': 5,  # 5s
+    }
+
+    URLS = {
+        RequestType.SMS: 'SMS_URL',
+        RequestType.DELIVERY_REQUEST: 'SMS_URL',
+        RequestType.VOICE_MESSAGE: 'VOICE_URL',
+        RequestType.VOICE_MESSAGE_DELIVERY_REQUEST: 'VOICE_URL',
     }
 
     def _get_extra_sender_data(self):
@@ -95,14 +108,22 @@ class SMSOperatorBackend(SMSBackend):
         :param request_type: type of the request to the SMS operator
         :return: serialized XML message that will be sent to the SMS operator service
         """
+        # Determine the base template and type based on request type
+        if request_type in [RequestType.VOICE_MESSAGE, RequestType.VOICE_MESSAGE_DELIVERY_REQUEST]:
+            base_template = self.TEMPLATES['base_voice']
+            type_value = 'Voice' if request_type == RequestType.VOICE_MESSAGE else 'Voice-Status'
+        else:
+            base_template = self.TEMPLATES['base_sms']
+            type_value = 'SMS' if request_type == RequestType.SMS else 'SMS-Status'
+        
         return render_to_string(
-            self.TEMPLATES['base'], {
+            base_template, {
                 'username': self.config['USERNAME'],
                 'password': self.config['PASSWORD'],
                 'prefix': str(self.config['UNIQ_PREFIX']) + '-',
                 'template_type': self.TEMPLATES[request_type],
                 'messages': messages,
-                'type': 'SMS' if request_type == RequestType.SMS else 'SMS-Status',
+                'type': type_value,
             }
         )
 
@@ -115,9 +136,12 @@ class SMSOperatorBackend(SMSBackend):
         :param change_sms_kwargs: extra kwargs that will be stored to the message object
         """
         requests_xml = self._serialize_messages(messages, request_type)
+        url_key = self.URLS[request_type]
+        url = self.config[url_key]
+        
         try:
             resp = generate_session(slug='pymess - SMS operator', related_objects=list(messages)).post(
-                self.config['URL'],
+                url,
                 data=requests_xml,
                 headers={'Content-Type': 'text/xml'},
                 timeout=self.config['TIMEOUT']
@@ -189,9 +213,10 @@ class SMSOperatorBackend(SMSBackend):
 
     def publish_message(self, message):
         try:
+            request_type = RequestType.VOICE_MESSAGE if getattr(message, 'is_voice_message', False) else RequestType.SMS
             self._send_requests(
                 [message],
-                request_type=RequestType.SMS.value,
+                request_type=request_type,
                 is_sending=True,
                 sent_at=timezone.now()
             )
@@ -210,7 +235,25 @@ class SMSOperatorBackend(SMSBackend):
             # about exception).
 
     def publish_messages(self, messages):
-        self._send_requests(messages, request_type=RequestType.SMS, is_sending=True, sent_at=timezone.now())
+        sent_at = timezone.now()
+        voice_messages = [message for message in messages if getattr(message, 'is_voice_message', False)]
+        sms_messages = [message for message in messages if not getattr(message, 'is_voice_message', False)]
+
+        if voice_messages:
+            self._send_requests(
+                voice_messages,
+                request_type=RequestType.VOICE_MESSAGE,
+                is_sending=True,
+                sent_at=sent_at
+            )
+
+        if sms_messages:
+            self._send_requests(
+                sms_messages,
+                request_type=RequestType.SMS,
+                is_sending=True,
+                sent_at=sent_at
+            )
 
     def _parse_response_codes(self, xml):
         """
@@ -222,8 +265,23 @@ class SMSOperatorBackend(SMSBackend):
 
         soup = BeautifulSoup(xml, 'html.parser')
 
-        return {int(item.smsid.string.lstrip(self.config['UNIQ_PREFIX'] + '-')): SmsOperatorState(int(item.status.string))
-                for item in soup.find_all('dataitem')}
+        result = {}
+        for item in soup.find_all('dataitem'):
+            # Try to get the ID from either smsid or msgid tags (for voice messages)
+            id_tag = item.smsid if item.smsid else item.msgid
+            if id_tag:
+                message_id = int(id_tag.string.lstrip(self.config['UNIQ_PREFIX'] + '-'))
+                status = SmsOperatorState(int(item.status.string))
+                result[message_id] = status
+        
+        return result
 
     def update_sms_states(self, messages):
-        self._send_requests(messages, request_type=RequestType.DELIVERY_REQUEST)
+        voice_messages = [message for message in messages if getattr(message, 'is_voice_message', False)]
+        sms_messages = [message for message in messages if not getattr(message, 'is_voice_message', False)]
+
+        if voice_messages:
+            self._send_requests(voice_messages, request_type=RequestType.VOICE_MESSAGE_DELIVERY_REQUEST)
+
+        if sms_messages:
+            self._send_requests(sms_messages, request_type=RequestType.DELIVERY_REQUEST)

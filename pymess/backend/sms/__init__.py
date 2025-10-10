@@ -55,6 +55,7 @@ class SMSController(BaseController):
         :param kwargs: extra attributes that will be saved with the message
         """
         try:
+            is_voice_message = template.is_voice_message if template else False
             return super().create_message(
                 recipient=recipient,
                 content=content,
@@ -65,7 +66,8 @@ class SMSController(BaseController):
                 priority=priority,
                 extra_data=kwargs,
                 sender=template.sender_name if template else None,
-                **self.get_backend(recipient).get_extra_message_kwargs()
+                is_voice_message=is_voice_message,
+                **self.get_backend(recipient, is_voice_message=is_voice_message).get_extra_message_kwargs()
             )
         except PersistenceException as ex:
             raise self.SMSSendingError(str(ex))
