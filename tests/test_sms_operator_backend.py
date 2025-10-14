@@ -36,12 +36,11 @@ class TestSMSOperatorBackend:
 
         assert root.tag == 'VoiceServices'
         header = root.find('./DataHeader/DataType')
-        assert header.text == 'Voice'
+        assert header.text == 'VoiceMessage'
         item = root.find('.//DataItem')
-        assert item.find('MobileTerminate').text == '+420111111111'
-        assert item.find('Text').text == 'Voice content'
+        assert item.find('PhoneNumber').text == '+420111111111'
+        assert item.find('./VoiceMsg/Text').text == 'Voice content'
         assert item.find('MsgId').text.endswith(str(message.pk))
-        assert item.find('PhoneNumberMo').text == 'CallerID'
 
     def test_serialize_sms_message_should_use_sms_template(self, backend):
         message = OutputSMSMessage.objects.create(

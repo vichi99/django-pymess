@@ -111,7 +111,7 @@ class SMSOperatorBackend(SMSBackend):
         # Determine the base template and type based on request type
         if request_type in [RequestType.VOICE_MESSAGE, RequestType.VOICE_MESSAGE_DELIVERY_REQUEST]:
             base_template = self.TEMPLATES['base_voice']
-            type_value = 'Voice' if request_type == RequestType.VOICE_MESSAGE else 'Voice-Status'
+            type_value = 'VoiceMessage' if request_type == RequestType.VOICE_MESSAGE else 'VoiceMessage-Status'
         else:
             base_template = self.TEMPLATES['base_sms']
             type_value = 'SMS' if request_type == RequestType.SMS else 'SMS-Status'
