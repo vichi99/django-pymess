@@ -41,7 +41,7 @@ class OutputSMSMessage(BaseMessage):
         self.recipient = normalize_phone_number(force_str(self.recipient))
 
     def clean_content(self):
-        if not settings.SMS_USE_ACCENT:
+        if not self.is_voice_message and not settings.SMS_USE_ACCENT:
             self.content = str(remove_accent(str(self.content)))
 
     @property

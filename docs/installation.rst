@@ -43,7 +43,7 @@ SMS
 
 .. attribute:: PYMESS_SMS_USE_ACCENT
 
-  Setting that sets if SMS will be sent with accent or not. Default value is ``False``.
+  Setting that sets if SMS will be sent with accent or not. Default value is ``False``. This setting does not work for SMS voice messages.
 
 .. attribute:: PYMESS_SMS_LOG_IDLE_MESSAGES
 
